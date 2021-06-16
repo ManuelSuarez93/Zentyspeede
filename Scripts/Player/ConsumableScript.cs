@@ -3,7 +3,7 @@ using ZentySpeede.General;
 
 namespace ZentySpeede.Player
 {
-    public class ConsumableScript : MovingObject
+    public class ConsumableScript : Spawnable
     {
         [SerializeField] float hungerFillAmount;
 
@@ -12,8 +12,9 @@ namespace ZentySpeede.Player
             if(other.gameObject.CompareTag("Player"))
             {
                 other.gameObject.GetComponentInParent<HungerMeter>().AddHunger(hungerFillAmount);
-                Destroy(gameObject);
+                Deactivation();
             }
+            
         }
 
     }

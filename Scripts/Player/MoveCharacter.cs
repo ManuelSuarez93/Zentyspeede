@@ -10,6 +10,7 @@ namespace ZentySpeede.Player
         [SerializeField] Transform pivot;
         [SerializeField] float angleTurn;
         [SerializeField] float rotationTime;
+        [SerializeField] Transform vcam;
         
         public bool rotating = false;
         public float currentAngle = 0;
@@ -48,11 +49,13 @@ namespace ZentySpeede.Player
             {
                 float finalAngle = Mathf.Lerp(currentAngle, targetAngle, timer / rotationTime);
                 pivot.localEulerAngles = new Vector3(finalAngle, 0, 0);
+                vcam.localEulerAngles = new Vector3(vcam.localEulerAngles.x, vcam.localEulerAngles.y, finalAngle);
                 timer += Time.deltaTime;
                 yield return null;
             }
 
             pivot.localEulerAngles = new Vector3(targetAngle, 0, 0);
+            vcam.localEulerAngles = new Vector3(vcam.localEulerAngles.x, vcam.localEulerAngles.y, targetAngle);
             currentAngle = targetAngle;
             rotating = false;
         }

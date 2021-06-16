@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using ZentySpeede.Obstacle;
 
@@ -9,63 +10,26 @@ namespace ZentySpeede.Player
 {
     public class ObstacleDetection : MonoBehaviour
     {
-        [SerializeField] float maxDistanceDetection = 50;
-        [SerializeField] float minDistanceDetection = 30;
+        [SerializeField] float passDistance = 50;
         [SerializeField] LayerMask detectionLayer;
-        [SerializeField] float passDistance = .2f;
-        [SerializeField] float deathDistance = .1f;
-        [SerializeField] Text distanceText;
+        [SerializeField] float greatPassDistance = .2f;
+        [SerializeField] UnityEvent obstacleFeedbackOnPass;
+        [SerializeField] UnityEvent obstacleFeedbackOnGreatPass;
         RaycastHit hit;
 
-        [SerializeField]
-        private ObstacleScript detectedObstacle;
-
-        public ObstacleScript DetectedObstacle { get => detectedObstacle; }
-
-        void Update()
+        private void Update()
         {
-            DebugRay();
-            DetectObstacle();
-            Debug.Log("Obstacle not pass: " + ObstacleNotPass());
-            distanceText.text = hit.distance.ToString();
+            Debug.DrawRay(transform.position, transform.right, Color.red);
         }
-
-        private void DetectObstacle()
+        public ObstacleScript GetDetectedObject()
         {
-            if (detectedObject)
-            {
-                if (detectedObject.GetComponentInParent<ObstacleScript>())
+                if (Physics.Raycast(transform.position, transform.right, out hit, passDistance, detectionLayer))
                 {
-                    SetDetectedObstacle(detectedObject);
-                    //ChangeObstacleColor(detectedObject);
-                }
-                else
-                {
-                    detectedObstacle = null;
-                }
-            }
-        }
-        private GameObject detectedObject
-        {
-            get
-            {
-                if (Physics.Raycast(transform.position, transform.right, out hit, maxDistanceDetection, detectionLayer))
-                {
-                    return hit.collider.gameObject;
+                    return hit.collider.gameObject.GetComponent<ObstacleScript>();
                 }
                 return null;
-            }
         }
-        private void ChangeObstacleColor(GameObject o) => o.GetComponent<MeshRenderer>().material.color = Color.red;
-        private void SetDetectedObstacle(GameObject o) => detectedObstacle = o.GetComponentInParent<ObstacleScript>();
-        private void DebugRay() => Debug.DrawRay(transform.position, transform.right, Color.green);
-        public bool ObstaclePass() => hit.distance >= passDistance && hit.distance <= minDistanceDetection;
-        public bool ObstacleNotPass() => hit.distance >= deathDistance && hit.distance < passDistance;
-
-        public void ObstaclePassAction()
-        {
-            detectedObstacle.PassedAction();
-        }
+        public bool ObstacleGreatPass() => hit.distance < greatPassDistance;
     }
 
     

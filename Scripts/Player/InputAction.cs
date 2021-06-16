@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.Events;
 using ZentySpeede.Obstacle;
@@ -15,17 +16,20 @@ public static class Inputs
 }
 public class InputAction : MonoBehaviour
 {
-    [SerializeField] ObstacleDetection obstacle;
+    [SerializeField] ObstacleDetection obstacleDetector;
     [SerializeField] HungerMeter hunger;
     [SerializeField] UnityEvent successEvent;
+    [SerializeField] UnityEvent greatSuccessEvent;
     [SerializeField] UnityEvent failEvent;
+    [SerializeField] UnityEvent onChangeEvent;
     [SerializeField] bool allowedOn;
 
-    [SerializeField] MeshRenderer mesh;
+    [SerializeField] Renderer mesh;
+    [SerializeField] AnimationController animController;
 
     private void Awake()
     {
-        TryGetComponent<ObstacleDetection>(out obstacle);
+        TryGetComponent<ObstacleDetection>(out obstacleDetector);
     }
     void Update()
     {
@@ -34,43 +38,56 @@ public class InputAction : MonoBehaviour
 
     public void IsTheCorrectInput()
     {
-        bool allowed = false;
         if (Input.GetButton(Inputs.INPUT_MORPH))
         {
-            
             if (Input.GetButtonDown(Inputs.INPUT_UP))
             {
-                allowed = isCorrectInputForShape(Inputs.INPUT_UP, obstacle.DetectedObstacle);
-                changeColorOnInput(Color.magenta);
+                ProcessInput(Color.magenta, Inputs.INPUT_UP);
+                onChangeEvent.Invoke();
+                animController.ChangeTo();
             }
             else if (Input.GetButtonDown(Inputs.INPUT_RIGHT))
             {
-                allowed = isCorrectInputForShape(Inputs.INPUT_RIGHT, obstacle.DetectedObstacle);
-                changeColorOnInput(Color.green);
+                ProcessInput(Color.green, Inputs.INPUT_RIGHT);
+                onChangeEvent.Invoke();
+                animController.ChangeTo();
             }
             else if (Input.GetButtonDown(Inputs.INPUT_LEFT))
             {
-                allowed = isCorrectInputForShape(Inputs.INPUT_LEFT, obstacle.DetectedObstacle);
-                changeColorOnInput(Color.yellow);
+                ProcessInput(Color.yellow, Inputs.INPUT_LEFT);
+                onChangeEvent.Invoke();
+                animController.ChangeTo();
             }
         }
         else
         {
             changeColorOnInput(Color.blue);
         }
-        if (obstacle.DetectedObstacle && obstacle.ObstaclePass())
-        {
-            obstacle.DetectedObstacle.SetPass(allowed);
-            if (allowed) successEvent.Invoke();
-        }
-        if(obstacle.DetectedObstacle && obstacle.ObstacleNotPass())
-        {
-           failEvent.Invoke();
-        }
-        Debug.Log(allowed);
-        allowedOn = allowed;
+       
+    }
 
-        
+    private void ProcessInput(Color color, string input)
+    {
+        changeColorOnInput(color);
+        var detectedObject = obstacleDetector.GetDetectedObject();
+        if (isCorrectInputForShape(input, detectedObject))
+        {
+            detectedObject.PassedAction();
+            if (obstacleDetector.ObstacleGreatPass())
+            {
+                greatSuccessEvent.Invoke();
+                Debug.Log("GreatPass");
+            }
+            else
+            {
+                successEvent.Invoke();
+                Debug.Log("Pass");
+            }
+        }
+        else
+        {
+            failEvent.Invoke();
+        }
     }
 
     private bool isCorrectInputForShape(string input, ObstacleScript detectedObstacle)

@@ -12,17 +12,16 @@ namespace ZentySpeede.General
         #region Variables
         [SerializeField] Transform spawnPoint, player,endPoint;
         [SerializeField] float maxTime;
-        [SerializeField] List<GameObject> pieces;
-        [SerializeField] int MaxAllowedPieces;
-        [SerializeField] UnityEvent spawnEvent;
+        [SerializeField] PieceFactory factory;
 
         float currentTime = 0f;
-        MovingObject movingObj;
 
-        private int RandomNumber() => Random.Range(0, pieces.Count - 1);
         #endregion
         #region Unity Methods
-
+        private void Start()
+        {
+            currentTime = maxTime;
+        }
         private void Update()
         {
             Timer();
@@ -36,17 +35,17 @@ namespace ZentySpeede.General
             }
             else
             {
-                spawnEvent.Invoke();
+                factory.CreatePiece(spawnPoint.position, endPoint.position);
                 currentTime = 0;
             }
         }
 
-        public void SpawnObject()
+        private void SpecialSpawn()
         {
-            GameObject o = Instantiate(pieces[RandomNumber()].gameObject);
-            movingObj = o.GetComponentInChildren<MovingObject>();
-            movingObj.EndPos = endPoint.position;
+
         }
+
+        
         #endregion
     }
 

@@ -6,22 +6,34 @@ namespace ZentySpeede.Obstacle
 {
     public class ObstacleDissolve : MonoBehaviour
     {
-        [SerializeField] Renderer rend;
+        MeshRenderer rend;
         [SerializeField] float maxTime;
         [SerializeField] Color startColor;
-        [SerializeField] Color endColor;
+        [SerializeField] Color finalColor;
+        [SerializeField] Material finalMaterial;
+        [SerializeField] Material startMaterial;
+        
         float timer;
+        private void Awake()
+        {
+            
+        }
         private void Start()
         {
+            rend = GetComponentInChildren<MeshRenderer>();
+            rend.material = startMaterial;
             timer = maxTime;
         }
         private void Update()
         {
             if (timer >= 0)
-            {
-                timer -= Time.deltaTime;
+            {   timer -= Time.deltaTime;
                 rend.material.SetFloat("_Amount", timer / maxTime);
-                rend.material.SetColor("_EmissionColor", Color.Lerp(startColor, endColor, timer / maxTime));
+                rend.material.SetColor("_EmissionColor", Color.Lerp(startColor, finalColor, timer / maxTime));
+            }
+            else
+            {
+                rend.material = finalMaterial;
             }
         }
     }
