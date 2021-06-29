@@ -10,24 +10,36 @@ namespace ZentySpeede.Piece
     public class PieceMove : Spawnable
     {
         #region Varaibles
-        [SerializeField] Vector3 endPos;
-        [SerializeField] float moveSpeed;
+        Vector3 endPos;
+        [SerializeField] Transform endSpawnPos;
         [SerializeField] List<SpawnerController> spawnerControllers;
-        [SerializeField] int maxPiecePerLane = 4;
 
-        [SerializeField] List<Spawnable> spawnables;
-        [SerializeField] List<Spawnable> s1;
-        [SerializeField] List<Spawnable> s2;
-        [SerializeField] List<Spawnable> s3;
-        
+        List<Spawnable> spawnables;
+        List<Spawnable> s1;
+        List<Spawnable> s2;
+        List<Spawnable> s3;
+
+        private static float moveSpeed = 20;
+        public static float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
+        public Transform EndSpawnPos { get => endSpawnPos; set => endSpawnPos = value; }
         int previouspoint;
         int currentpoint;
         #endregion
+
+        #region Unity Methods
+        private void Awake()
+        {
+            spawnables = new List<Spawnable>();
+            s1 = new List<Spawnable>();
+            s2 = new List<Spawnable>();
+            s3 = new List<Spawnable>();
+        }
         private void Update()
         {
             transform.position = SetTrajectory;
             DoInEndPos();
         }
+        #endregion
 
         #region Add Spawanable funcitonality
         public void AddToPoint()
@@ -39,18 +51,16 @@ namespace ZentySpeede.Piece
                 for (int j = 0; j < spawnerControllers[i].spawnPoints.Count; j++)
                 {
                     CheckRulesForSpawning(i, j);
-                    if(currentPieceAmount <= maxPiecePerLane)
+                    switch (currentpoint)
                     {
-                        switch (currentpoint)
-                        {
-                            case 0: break;
-                            case 1: SpawnToPoint(s1, i, j); currentPieceAmount++; break;
-                            case 2: SpawnToPoint(s2, i, j); currentPieceAmount++; break;
-                            case 3: SpawnToPoint(s3, i, j); currentPieceAmount++; break;
-                            default: break;
-                        }
-                        
+                        case 0: break;
+                        case 1: SpawnToPoint(s1, i, j); currentPieceAmount++; break;
+                        case 2: SpawnToPoint(s2, i, j); currentPieceAmount++; break;
+                        case 3: SpawnToPoint(s3, i, j); currentPieceAmount++; break;
+                        default: break;
                     }
+                        
+                    
                 }
                 currentPieceAmount = 0;
             }
@@ -58,27 +68,21 @@ namespace ZentySpeede.Piece
         void CheckRulesForSpawning(int i, int j)
         {
             currentpoint = RandomPoint(4);
-            //Chequeo que en el spot previo hay una pared o obstaculo
             if (previouspoint == 3 && (currentpoint == 3 || currentpoint == 2))
             {
 
                 currentpoint = RandomPoint(2);
-                print("Wall was before, chaning to new point: " + currentpoint);
-                //Si esta no es la primera fila chequeo si hay para los costados
                 if (i > 0)
                 {
                     if (spawnerControllers[i - 1].spawnPoints[j].GetComponentInChildren<Spawnable>() is WallTrigger)
                     {
-                        print("Wall was next in lane, chaning to new point: " + currentpoint);
                         currentpoint = RandomPoint(3);
                     }
                 }
             }
-            //Si el anterior es obstaculo chequea que el siguiente no sea una pared
             else if (previouspoint == 2 && currentpoint == 3)
             {
                 currentpoint = RandomPoint(3);
-                print("Obstacle was before, chagning to new point" + currentpoint);
             }
             previouspoint = currentpoint;
         }
@@ -118,7 +122,7 @@ namespace ZentySpeede.Piece
         void DoInEndPos() { if (IsInEndPos) Deactivation(); }
         bool IsInEndPos => transform.position == endPos;
         public Vector3 EndPos { get => endPos; set => endPos = value; }
-        #endregion
+        
         public override void Deactivation()
         {
             foreach (Spawnable s in spawnables)
@@ -127,9 +131,11 @@ namespace ZentySpeede.Piece
             }
             s1.Clear(); s2.Clear(); s3.Clear(); spawnables.Clear();
             base.Deactivation();
-            
-            
+
+
         }
+        #endregion
+
 
     }
 }

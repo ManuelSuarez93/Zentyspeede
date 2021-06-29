@@ -1,108 +1,103 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.Events;
 using ZentySpeede.Obstacle;
-using ZentySpeede.Player;
+using ZentySpeede.Animations;
 
-public static class Inputs
+namespace ZentySpeede.Player
 {
-    public static readonly string INPUT_MORPH = "Jump";
-    public static readonly string INPUT_UP = "Up";
-    public static readonly string INPUT_LEFT = "Left";
-    public static readonly string INPUT_RIGHT = "Right";
-}
-public class InputAction : MonoBehaviour
-{
-    [SerializeField] ObstacleDetection obstacleDetector;
-    [SerializeField] HungerMeter hunger;
-    [SerializeField] UnityEvent successEvent;
-    [SerializeField] UnityEvent greatSuccessEvent;
-    [SerializeField] UnityEvent failEvent;
-    [SerializeField] UnityEvent onChangeEvent;
-    [SerializeField] bool allowedOn;
-
-    [SerializeField] Renderer mesh;
-    [SerializeField] AnimationController animController;
-
-    private void Awake()
+    [RequireComponent(typeof(ObstacleDetection))]
+    [RequireComponent(typeof(AnimationController))]
+    public class InputAction : MonoBehaviour
     {
-        TryGetComponent<ObstacleDetection>(out obstacleDetector);
-    }
-    void Update()
-    {
-        IsTheCorrectInput();
-    }
+        #region Variables
+        
+        [SerializeField] UnityEvent successEvent;
+        [SerializeField] UnityEvent greatSuccessEvent;
+        [SerializeField] UnityEvent failEvent;
+        [SerializeField] UnityEvent onChangeEvent;
+        
+        [SerializeField] ObstacleDetection obstacleDetector;
+        [SerializeField] Renderer mesh;
+        [SerializeField] AnimationController animController;
 
-    public void IsTheCorrectInput()
-    {
-        if (Input.GetButton(Inputs.INPUT_MORPH))
+        bool allowedOn;
+        #endregion
+
+        #region Unity Methods
+        private void Awake() => TryGetComponent<ObstacleDetection>(out obstacleDetector);
+        void Update() => IsTheCorrectInput();
+        #endregion
+
+        #region Methods
+        public void IsTheCorrectInput()
         {
-            if (Input.GetButtonDown(Inputs.INPUT_UP))
+            if (Input.GetButton(Inputs.INPUT_MORPH))
             {
-                ProcessInput(Color.magenta, Inputs.INPUT_UP);
-                onChangeEvent.Invoke();
-                animController.ChangeTo();
-            }
-            else if (Input.GetButtonDown(Inputs.INPUT_RIGHT))
-            {
-                ProcessInput(Color.green, Inputs.INPUT_RIGHT);
-                onChangeEvent.Invoke();
-                animController.ChangeTo();
-            }
-            else if (Input.GetButtonDown(Inputs.INPUT_LEFT))
-            {
-                ProcessInput(Color.yellow, Inputs.INPUT_LEFT);
-                onChangeEvent.Invoke();
-                animController.ChangeTo();
-            }
-        }
-        else
-        {
-            changeColorOnInput(Color.blue);
-        }
-       
-    }
-
-    private void ProcessInput(Color color, string input)
-    {
-        changeColorOnInput(color);
-        var detectedObject = obstacleDetector.GetDetectedObject();
-        if (isCorrectInputForShape(input, detectedObject))
-        {
-            detectedObject.PassedAction();
-            if (obstacleDetector.ObstacleGreatPass())
-            {
-                greatSuccessEvent.Invoke();
-                Debug.Log("GreatPass");
+                if (Input.GetButtonDown(Inputs.INPUT_UP))
+                {
+                    ProcessInput(Color.magenta, Inputs.INPUT_UP);
+                    onChangeEvent.Invoke();
+                    animController.ChangeTo("BallTransform");
+                }
+                else if (Input.GetButtonDown(Inputs.INPUT_RIGHT))
+                {
+                    ProcessInput(Color.green, Inputs.INPUT_RIGHT);
+                    onChangeEvent.Invoke();
+                    animController.ChangeTo("BallTransform");
+                }
+                else if (Input.GetButtonDown(Inputs.INPUT_LEFT))
+                {
+                    ProcessInput(Color.yellow, Inputs.INPUT_LEFT);
+                    onChangeEvent.Invoke();
+                    animController.ChangeTo("STransform");
+                }
             }
             else
             {
-                successEvent.Invoke();
-                Debug.Log("Pass");
+                changeColorOnInput(Color.blue);
+            }
+
+        }
+
+        private void ProcessInput(Color color, string input)
+        {
+            changeColorOnInput(color);
+            var detectedObject = obstacleDetector.GetDetectedObject();
+            if (isCorrectInputForShape(input, detectedObject))
+            {
+                detectedObject.PassedAction();
+                if (obstacleDetector.ObstacleGreatPass())
+                {
+                    greatSuccessEvent.Invoke();
+                    Debugger.instance.DebugMessage($"Great Pass on: {detectedObject.name}", Debugger.DebugType.Log);
+                }
+                else
+                {
+                    successEvent.Invoke();
+                    Debugger.instance.DebugMessage($"Pass on:{detectedObject.name}", Debugger.DebugType.Log);
+                }
+            }
+            else
+            {
+                failEvent.Invoke();
             }
         }
-        else
-        {
-            failEvent.Invoke();
-        }
-    }
 
-    private bool isCorrectInputForShape(string input, ObstacleScript detectedObstacle)
-    {
-        if (detectedObstacle == null) return false;
-        else
+        private bool isCorrectInputForShape(string input, ObstacleScript detectedObstacle)
         {
-            return (input == Inputs.INPUT_UP && detectedObstacle.Type == ObstacleScript.ObstacleType.circleForm) ||
-                   (input == Inputs.INPUT_LEFT && detectedObstacle.Type == ObstacleScript.ObstacleType.sForm) ||
-                   (input == Inputs.INPUT_RIGHT && detectedObstacle.Type == ObstacleScript.ObstacleType.triangleForm);
+            if (detectedObstacle == null) return false;
+            else
+            {
+                return (input == Inputs.INPUT_UP && detectedObstacle.Type == ObstacleScript.ObstacleType.circleForm) ||
+                       (input == Inputs.INPUT_LEFT && detectedObstacle.Type == ObstacleScript.ObstacleType.sForm) ||
+                       (input == Inputs.INPUT_RIGHT && detectedObstacle.Type == ObstacleScript.ObstacleType.triangleForm);
+            }
         }
-    }
 
-    private void changeColorOnInput(Color color)
-    {
-        mesh.material.color = color;
+        private void changeColorOnInput(Color color)
+        {
+            mesh.material.color = color;
+        }
+        #endregion
     }
 }

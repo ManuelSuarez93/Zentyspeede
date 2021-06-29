@@ -1,24 +1,31 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace ZentySpeede.Audio
 {
+    [RequireComponent(typeof(AudioSource))]
     public class ObstacleAudio : MonoBehaviour
     {
+        #region Variables
         [SerializeField] List<AudioClip> spawnClips;
         [SerializeField] List<AudioClip> endClip;
         [SerializeField] AudioSource source;
+        [SerializeField] bool playSoundOnSpawn = true;
+        #endregion
 
-        private void Awake()
+        #region Methods
+        private void OnEnable()
         {
             PlaySpawnClip();
         }
         public void PlaySpawnClip()
         {
-            source.clip = spawnClips[RandomNumber(spawnClips)];
-            source.Play();
-            source.volume = 0.1f;
+            if(playSoundOnSpawn)
+            {
+                source.clip = spawnClips[RandomNumber(spawnClips)];
+                source.Play();
+                source.volume = 0.1f;
+            }
         }
 
         public void PlayEndClip()
@@ -29,7 +36,7 @@ namespace ZentySpeede.Audio
         }
 
         public int RandomNumber(List<AudioClip> t) => Random.Range(0, t.Count - 1);
-
+        #endregion
     }
 }
 

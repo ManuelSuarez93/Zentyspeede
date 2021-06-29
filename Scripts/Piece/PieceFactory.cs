@@ -1,17 +1,18 @@
 using UnityEngine;
-using System.Collections.Generic;
 using ZentySpeede.General;
-using ZentySpeede.Obstacle;
 
 namespace ZentySpeede.Piece
 {
     public class PieceFactory : MonoBehaviour
     {
+        #region Variables
+        [Header("Prefab pools")]
         [SerializeField] PrefabPool piecePool;
         [SerializeField] PrefabPool obstaclePool;
         [SerializeField] PrefabPool wallPool;
         [SerializeField] PrefabPool consumablePool;
 
+        [Header("Prefab amount")]
         [Tooltip("Amount of obstacles")]
         [Range(0, 72)]
         [SerializeField] int ObstacleAmount;
@@ -25,6 +26,7 @@ namespace ZentySpeede.Piece
         [SerializeField] int ConsumableAmount;
 
         int RandomAmount(int count) => Random.Range(0, count);
+        #endregion
         public Spawnable CreatePiece(Vector3 startPos, Vector3 endPos)
         {
             Spawnable newPiece = piecePool.InstanceObject(startPos, endPos);
@@ -45,6 +47,7 @@ namespace ZentySpeede.Piece
                     Spawnable consumable = consumablePool.InstanceObject(startPos);
                     newPiece.GetComponent<PieceMove>().AddSpawnableToLists(consumable);
                 }
+
                 newPiece.GetComponent<PieceMove>().AddToPoint();
             }
 

@@ -5,46 +5,43 @@ using ZentySpeede.Player;
 
 namespace ZentySpeede.Obstacle
 {
+    [RequireComponent(typeof(Collider))]
+    [RequireComponent(typeof(ObstacleAudio))]
+    [RequireComponent(typeof(ObstacleGlow))]
+    [RequireComponent(typeof(ObstacleDissolve))]
     public class ObstacleScript : Spawnable
     {
+        #region Variables
+        [SerializeField] ObstacleGlow oGlow;
         [SerializeField] ObstacleType type;
-
-        Collider collider;
-        Renderer renderer;
-        ObstacleAudio oAudio;  
+        [SerializeField] Collider collider;
+        [SerializeField] Renderer renderer;
+        [SerializeField] ObstacleAudio oAudio;  
 
         private Color normalColor => renderer.material.color;
-
-        private void Awake()
-        {
-            renderer = GetComponentInChildren<Renderer>();
-            collider = GetComponent<Collider>();
-            oAudio = GetComponent<ObstacleAudio>();
-        }
 
         public enum ObstacleType
         {
             circleForm, sForm, triangleForm, wall
         }
         public ObstacleType Type { get => type; }
+        #endregion
 
+        #region Methods
         public void PassedAction()
         {
             oAudio.PlayEndClip();
             collider.enabled = false;
             renderer.material.color = Color.blue;
         }
-
         public override void Initialization()
         {
             collider.enabled = true;
             renderer.material.color = normalColor;
+            oGlow.Resetcolor();
         }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            other.GetComponent<HungerMeter>().SetHunger(0);
-        }
+        private void OnTriggerEnter(Collider other) => other.GetComponent<HungerMeter>().SetHunger(0);
+        #endregion
 
     }
 }

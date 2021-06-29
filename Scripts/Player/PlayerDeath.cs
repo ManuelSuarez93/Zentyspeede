@@ -1,37 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.Events;
-using UnityEngine.UI;
 using ZentySpeede.Player;
 
 public class PlayerDeath : MonoBehaviour
 {
+    #region Variabels
     [SerializeField] ObstacleDetection obstacle;
     [SerializeField] HungerMeter hunger;
-    [SerializeField] Text deathText;
+    [SerializeField] GameObject deathText;
     [SerializeField] float maxTime;
     [SerializeField] float currentTimer;
     [SerializeField] UnityEvent deathEvent;
     [SerializeField] bool death;
-
-    private void Awake()
-    {
-        Time.timeScale = 1;
-    }
-
-    void Start()
-    {
-        currentTimer = 0;
-    }
-
-    
+    #endregion
+    #region Unity Methods
+    private void Awake() => Time.timeScale = 1;
+    void Start() => currentTimer = 0;
     void Update()
     {
         if(death) Timer();
     }
-
+    #endregion
+    #region Methods
     public void Death()
     {
         death = true;
@@ -51,4 +41,5 @@ public class PlayerDeath : MonoBehaviour
             Time.timeScale = 1;
         }
     }
+    #endregion
 }

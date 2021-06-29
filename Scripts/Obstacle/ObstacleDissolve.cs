@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace ZentySpeede.Obstacle
 {
     public class ObstacleDissolve : MonoBehaviour
     {
+        #region Variables
         MeshRenderer rend;
         [SerializeField] float maxTime;
         [SerializeField] Color startColor;
@@ -14,10 +13,9 @@ namespace ZentySpeede.Obstacle
         [SerializeField] Material startMaterial;
         
         float timer;
-        private void Awake()
-        {
-            
-        }
+        #endregion
+
+        #region Unity Methods
         private void Start()
         {
             rend = GetComponentInChildren<MeshRenderer>();
@@ -36,6 +34,9 @@ namespace ZentySpeede.Obstacle
                 rend.material = finalMaterial;
             }
         }
+
+        public void ResetDissolve() => timer = 0;
+        #endregion
     }
 }
 

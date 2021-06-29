@@ -1,31 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationController : MonoBehaviour
+namespace ZentySpeede.Animations
 {
-
-    [SerializeField] Animator anim;
-    // Start is called before the first frame update
-
-    private void Awake()
+    public class AnimationController : MonoBehaviour
     {
-        anim = GetComponentInChildren<Animator>();
+        Animator anim;
+        private void Awake() => anim = GetComponentInChildren<Animator>();
+
+        public void ChangeTo(string t) =>  anim.SetTrigger(t);
     }
 
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void ChangeTo()
-    {
-        anim.SetTrigger("TransformationON");
-    }
 }

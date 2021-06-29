@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using PathCreation;
 using ZentySpeede.Piece;
-using UnityEngine.Events;
 
 namespace ZentySpeede.General
 {
@@ -13,10 +9,13 @@ namespace ZentySpeede.General
         [SerializeField] Transform spawnPoint, player,endPoint;
         [SerializeField] float maxTime;
         [SerializeField] PieceFactory factory;
+        [SerializeField] float pieceLength;
 
+        private Transform lastPieceTransform;
         float currentTime = 0f;
 
         #endregion
+
         #region Unity Methods
         private void Start()
         {
@@ -27,6 +26,9 @@ namespace ZentySpeede.General
             Timer();
         }
 
+        #endregion
+
+        #region Methods
         private void Timer()
         {
             if(currentTime < maxTime)
@@ -35,17 +37,23 @@ namespace ZentySpeede.General
             }
             else
             {
-                factory.CreatePiece(spawnPoint.position, endPoint.position);
+                if (lastPieceTransform == null)
+                {
+                    lastPieceTransform = factory.CreatePiece(spawnPoint.position, endPoint.position).transform;
+                }
+                else
+                {
+                    Spawnable spawnable = factory.CreatePiece(lastPieceTransform.GetComponent<PieceMove>().EndSpawnPos.position, endPoint.position);
+                    if (spawnable == null)
+                    {
+                        return;
+                    }
+                    lastPieceTransform = spawnable.transform;
+                }
+                
                 currentTime = 0;
             }
         }
-
-        private void SpecialSpawn()
-        {
-
-        }
-
-        
         #endregion
     }
 

@@ -1,12 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace ZentySpeede.Player
 {
     public class MoveCharacter : MonoBehaviour
     {
+        #region Variables
         [SerializeField] Transform pivot;
         [SerializeField] float angleTurn;
         [SerializeField] float rotationTime;
@@ -14,8 +13,9 @@ namespace ZentySpeede.Player
         
         public bool rotating = false;
         public float currentAngle = 0;
+        #endregion
 
-        // Update is called once per frame
+        #region Methods
         void Update()
         {
             if(!Input.GetButton(Inputs.INPUT_MORPH))
@@ -23,7 +23,6 @@ namespace ZentySpeede.Player
                 Rotate();
             }
         }
-
         void Rotate()
         {
             if(!rotating)
@@ -38,7 +37,6 @@ namespace ZentySpeede.Player
                 }
             }
         }
-
         public IEnumerator Rotation(bool isRight)
         {
             rotating = true;
@@ -59,6 +57,7 @@ namespace ZentySpeede.Player
             currentAngle = targetAngle;
             rotating = false;
         }
+        #endregion
 
     }
 }

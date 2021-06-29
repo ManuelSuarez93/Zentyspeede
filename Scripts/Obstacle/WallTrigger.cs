@@ -4,13 +4,16 @@ using ZentySpeede.Player;
 
 namespace ZentySpeede.Obstacle
 {
+    [RequireComponent(typeof(ObstacleDissolve))]
     public class WallTrigger : Spawnable
     {
-        private void OnTriggerEnter(Collider other)
+        [SerializeField] ObstacleDissolve oDissolve;
+        private void OnTriggerEnter(Collider other) => other.GetComponent<HungerMeter>().SetHunger(0);
+        public override void Initialization()
         {
-            other.GetComponent<HungerMeter>().SetHunger(0);
+            oDissolve.ResetDissolve();
+            base.Initialization();
         }
-        
     }
 
 }

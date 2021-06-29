@@ -21,7 +21,6 @@ namespace ZentySpeede.Audio
         public float ClipLoudness { get => clipLoudness; set => clipLoudness = value; }
 
 
-        // Use this for initialization
         private void Awake()
 		{
 			clipSampleData = new float[sampleDataLength];

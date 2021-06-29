@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneManagerScript : MonoBehaviour
 {
+    #region Singleton
     private static SceneManagerScript _instance;
     public static SceneManagerScript instance
     {
@@ -42,31 +40,13 @@ public class SceneManagerScript : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
 
     }
+    #endregion
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    #region Methods
+    public void Play(int i) => SceneManager.LoadScene(i);
 
-    }
+    public void Quit() => Application.Quit();
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    public void Play(int i)
-    {
-        SceneManager.LoadScene(i);
-    }
-
-    public void Quit()
-    {
-        Application.Quit();
-    }
-
-    public void ReturnToMainMenu(int i)
-    {
-        SceneManager.LoadScene(i);
-    }
+    public void ReturnToMainMenu(int i) => SceneManager.LoadScene(i);
+    #endregion
 }
