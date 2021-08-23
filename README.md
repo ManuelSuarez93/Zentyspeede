@@ -8,4 +8,4 @@ Use space to morph, and press left,right or up to morph before going through an 
 
 Gain points by surviving and going through obstacles.
 
-![Alt text](zentyspeede.PNG?raw=true "Title")
+![Alt text](ebgmN_.png?raw=true "Title")
