@@ -8,6 +8,12 @@ namespace ZentySpeede.Animations
         private void Awake() => anim = GetComponentInChildren<Animator>();
 
         public void ChangeTo(string t) =>  anim.SetTrigger(t);
+
+
+        public Animator GetAnim()
+        {
+            return anim;
+        }
     }
 
 

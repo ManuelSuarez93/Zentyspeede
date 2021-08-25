@@ -1,10 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
+    #region Variables
     private int routeToGo = 0;
     private float tiempo = 0f;
     private Vector3 playerPosition;
@@ -15,14 +14,9 @@ public class PlayerMovement : MonoBehaviour
     private float speedMod = 0.5f;
     [SerializeField]
     private Transform[] rutas;
+    #endregion
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
+    #region Uniy Methods
     void Update()
     {
         if(permitirCoroutine)
@@ -30,7 +24,9 @@ public class PlayerMovement : MonoBehaviour
             StartCoroutine(IrPorLaRuta(routeToGo));
         }
     }
+    #endregion
 
+    #region Methods
     private IEnumerator IrPorLaRuta(int i)
     {
         permitirCoroutine = false;
@@ -67,4 +63,5 @@ public class PlayerMovement : MonoBehaviour
         prevPosition = playerPosition;
         transform.forward = direction;
     }
+    #endregion
 }

@@ -10,28 +10,32 @@ namespace ZentySpeede.Player
         [SerializeField] float angleTurn;
         [SerializeField] float rotationTime;
         [SerializeField] Transform vcam;
-        
+
+        InputManager inputManager;
         public bool rotating = false;
         public float currentAngle = 0;
         #endregion
 
-        #region Methods
+        #region Unity Methods
+        private void Awake() => inputManager = GetComponent<InputManager>();
         void Update()
         {
-            if(!Input.GetButton(Inputs.INPUT_MORPH))
+            if(!inputManager.IsInMorph)
             {
                 Rotate();
             }
         }
+        #endregion
+        #region Methods
         void Rotate()
         {
             if(!rotating)
             {
-                if (Input.GetButtonDown(Inputs.INPUT_LEFT))
+                if (inputManager.IsLeft)
                 {
                     StartCoroutine(Rotation(false));
                 }
-                if (Input.GetButtonDown(Inputs.INPUT_RIGHT))
+                if (inputManager.IsRight)
                 {
                     StartCoroutine(Rotation(true));
                 }

@@ -52,11 +52,11 @@ namespace ZentySpeede.Player
                     oGlow = GetObstacleGlow();
                     if (oGlow != null)
                     {
-                        oGlow.ModifyGlow((passDistance / hit.distance) + (intensity * (Time.deltaTime * glowMultiplier)));
+                        oGlow.ModifyGlow((ObstacleGreatPass() ? intensity * glowMultiplier : intensity) * (Time.deltaTime + 10));
                     }
                     else
                     {
-                        Debugger.instance.DebugMessage(hit.collider.name + "no tiene collider", Debugger.DebugType.Log);
+                        //Debugger.instance.DebugMessage(hit.collider.name + "no tiene collider", Debugger.DebugType.Log);
                     }
                 }
 
@@ -77,8 +77,8 @@ namespace ZentySpeede.Player
             if(Debugger.instance.enableDebug)
             {
                 Debug.DrawRay(transform.position, transform.right, Color.red);
-                textDebugDistance.text = $"Distance:{(passDistance / hit.distance)}";
-                finalDistance.text = $"Glow Dist:{((passDistance / hit.distance) + (intensity * Time.deltaTime))}";
+                textDebugDistance.text = $"Distance:{(hit.distance)}";
+                finalDistance.text = $"Glow Dist:{((passDistance / hit.distance) * (intensity * (Time.deltaTime * glowMultiplier)))}";
             }
         }
     }

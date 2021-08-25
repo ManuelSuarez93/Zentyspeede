@@ -9,11 +9,21 @@ namespace ZentySpeede.Audio
         #region Variables
         [SerializeField] List<AudioClip> spawnClips;
         [SerializeField] List<AudioClip> endClip;
+        [SerializeField] List<AudioClip> crashClip;
         [SerializeField] AudioSource source;
         [SerializeField] bool playSoundOnSpawn = true;
         #endregion
 
         #region Methods
+
+        private void Start()
+        {
+            if (AudioController.Instance.Sounds != null) 
+            {
+                Debug.Log("LO QUEEEEE");
+                AudioController.Instance.Sounds.Add(source); 
+            }
+        }
         private void OnEnable()
         {
             PlaySpawnClip();
@@ -34,7 +44,13 @@ namespace ZentySpeede.Audio
             source.Play();
             source.volume = 0.75f;
         }
-
+        
+        public void PlayCrashClip()
+        {
+            source.clip = crashClip[RandomNumber(crashClip)];
+            source.Play();
+            source.volume = 0.75f;
+        }
         public int RandomNumber(List<AudioClip> t) => Random.Range(0, t.Count - 1);
         #endregion
     }

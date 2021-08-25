@@ -100,7 +100,7 @@ namespace ZentySpeede.Piece
         { 
             if (spawnable != null) 
             {
-                if (spawnable is ConsumableScript) s1.Add(spawnable); 
+                if (spawnable is ConsumableScript || spawnable is NoHungerPowerUp) s1.Add(spawnable); 
                 else if (spawnable is ObstacleScript) s2.Add(spawnable); 
                 else if (spawnable is WallTrigger) s3.Add(spawnable);
 
@@ -109,10 +109,12 @@ namespace ZentySpeede.Piece
         }
         public void SetActiveSpawnable()
         {
+            Debugger.instance.DebugMessage($"<color=yellow> Piece:{gameObject} starting spawn time = {Time.time}</color>", Debugger.DebugType.Log);
             foreach(Spawnable s in spawnables)
             {
                 s.gameObject.SetActive(true);
             }
+            Debugger.instance.DebugMessage($"<color=blue> Piece:{gameObject} finishing spawn time = {Time.time}</color>", Debugger.DebugType.Log);
         }
         #endregion
 

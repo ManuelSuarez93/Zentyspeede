@@ -40,7 +40,11 @@ namespace ZentySpeede.Obstacle
             renderer.material.color = normalColor;
             oGlow.Resetcolor();
         }
-        private void OnTriggerEnter(Collider other) => other.GetComponent<HungerMeter>().SetHunger(0);
+        private void OnTriggerEnter(Collider other)
+        {
+            other.GetComponent<HungerMeter>().SetHunger(0);
+            oAudio.PlayCrashClip();
+        }
         #endregion
 
     }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,12 +40,8 @@ public class Debugger : MonoBehaviour
     }
     #endregion
 
-    [SerializeField] Text uiText1;
-    [SerializeField] Text uiText2;
-    [SerializeField] Text uiText3;
-    [SerializeField] Text uiText4;
-    [SerializeField] Text uiText5;
-    [SerializeField] Text uiText6;
+    [SerializeField] List<Text> uiText;
+    [SerializeField] Text textbox;
     public bool enableDebug;
     public enum DebugType
     {
@@ -66,8 +63,18 @@ public class Debugger : MonoBehaviour
                     Debug.Log(msg);
                     break;
             }
+
+            textbox.text = msg + "\n" + textbox.text;
         }
         
+    }
+
+    public void DebugTextUI(int i, string msg)
+    {
+        if(uiText.Count >= i && uiText[i] != null)
+        {
+            uiText[i].text = msg;
+        }
     }
     
 }

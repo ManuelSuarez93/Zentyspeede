@@ -1,6 +1,7 @@
 using Krivodeling.UI.Effects;
 using UnityEngine;
 using UnityEngine.Events;
+using ZentySpeede.Player;
 
 namespace ZentySpeede.General
 {
@@ -11,13 +12,14 @@ namespace ZentySpeede.General
         [SerializeField] UIBlur uiBlur;
         [SerializeField] UnityEvent pauseEvent;
         [SerializeField] UnityEvent unpauseEvent;
+        [SerializeField] InputManager inputManager;
         #endregion
 
         #region Unity Methods
         void Start() => isPaused = false;
         void Update()
         {
-            if (Input.GetButtonDown("Pause"))
+            if (inputManager.IsPause)
             {
                 Paused();
             }
@@ -25,7 +27,7 @@ namespace ZentySpeede.General
         #endregion
 
         #region Methods
-        private void Paused()
+        public void Paused()
         {
             isPaused = !isPaused;
             if (isPaused)

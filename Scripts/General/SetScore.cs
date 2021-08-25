@@ -10,6 +10,7 @@ public class SetScore : MonoBehaviour
     float comboTime;
     bool isInCombo = false;
     int counter;
+    public int highScore = 0;
 
     [SerializeField] List<int> comboThresholds;
     [SerializeField] float maxComboTime;
@@ -72,19 +73,18 @@ public class SetScore : MonoBehaviour
         multiplierText.text = $"X{multiplier}";
         comboTimerBar.fillAmount = comboTime / maxComboTime;
     }
-    public float HighScore
+
+    public void SetHighScore()
     {
-        get => PlayerPrefs.GetFloat("HighScore", 0);
-        set
+        if(score > PlayerPrefs.GetFloat("HighScore"))
         {
-            PlayerPrefs.SetFloat("HighScore", value);
+            PlayerPrefs.SetFloat("HighScore", score);
             PlayerPrefs.Save();
         }
     }
 
-
     #endregion
-
+        
     #region OneLine Methods
     public void SetMultiplier(int m) => multiplier = m;
     public void SetComboTimer(int i) => comboTime = i;

@@ -1,5 +1,6 @@
 using UnityEngine;
 using ZentySpeede.Piece;
+using ZentySpeede.Audio;
 
 namespace ZentySpeede.General
 {
@@ -10,6 +11,7 @@ namespace ZentySpeede.General
         [SerializeField] float maxTime;
         [SerializeField] PieceFactory factory;
         [SerializeField] float pieceLength;
+        [SerializeField] AudioSource music;
 
         private Transform lastPieceTransform;
         float currentTime = 0f;
@@ -19,6 +21,7 @@ namespace ZentySpeede.General
         #region Unity Methods
         private void Start()
         {
+            AudioController.Instance.Music = music;
             currentTime = maxTime;
         }
         private void Update()
